@@ -78,8 +78,7 @@ Tab:AddToggle({
 end
 })
 
-
-local Functions = {
+local function knifenocd()
 getKnife = function()
 		local knife = nil
 		for _,tool in next,Stores.you.lplr.Backpack:GetChildren() do
@@ -97,7 +96,10 @@ getKnife = function()
 			end
 		end
 		return knife
-end,
+end
+end
+
+local function gunnocd()
 getRevolver = function()
 		local revolver = nil
 		for _,tool in next,Stores.you.lplr.Backpack:GetChildren() do
@@ -115,8 +117,9 @@ getRevolver = function()
 			end
 		end
 		return revolver
-	end
-}
+end
+end
+
 
 local Section = Tab:AddSection({
     Name = "Murderer"
@@ -130,7 +133,7 @@ Name = "Fast Knife Throw",
       if bool then
         spawn(function()
           repeat
-            local knife = Functions.getKnife()
+            local knife = knifenocd()
             if knife then
               knife:SetAttribute("ThrowSpeed",1000)
             end
@@ -138,13 +141,13 @@ Name = "Fast Knife Throw",
           until getgenv().usingLightSpeed == false
         end)
       else
-        local knife = Functions.getKnife()
+        local knife = knifenocd()
         if knife then
           knife:SetAttribute("ThrowSpeed",125)
         end
       end
     end
-  })
+})
 
 local Section = Tab:AddSection({
     Name = "Sheriff"
@@ -158,7 +161,7 @@ Tab:AddToggle({
       if bool then
         spawn(function()
           repeat
-            local revolver = Functions.getRevolver()
+            local revolver = gunnocd()
             if revolver then
               revolver:SetAttribute("Cooldown",0.1)
             end
@@ -166,13 +169,13 @@ Tab:AddToggle({
           until getgenv().usingSpeedSpoof == false
         end)
       else
-        local revolver = Functions.getRevolver()
+        local revolver = gunnocd()
         if revolver then
           revolver:SetAttribute("Cooldown",2.5)
         end
       end
     end
-  })
+})
 
 local Tab = Window:MakeTab({
     Name = "Teleport",
