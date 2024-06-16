@@ -437,56 +437,67 @@ local Section = Tab:AddSection({
     Name = "Hitbox:"
 })
 
-local function CreateHitBox()
-    _G.Size = 20
-_G.Disabled = true
+local CoreGui = game:GetService("StarterGui")
+local Players = game:GetService("Players")
 
-game:GetService('RunService').RenderStepped:connect(function()
-  if _G.Disabled then
-    for i,v in next, game:GetService('Players'):GetPlayers() do
-      if v.Name ~= game:GetService('Players').LocalPlayer.Name then
-        pcall(function()
-          v.Character.HumanoidRootPart.Size = Vector3.new(_G.Size,_G.Size,_G.Size)
-          v.Character.HumanoidRootPart.Transparency = 0.7
-          v.Character.HumanoidRootPart.BrickColor = BrickColor.new("Really red")
-          v.Character.HumanoidRootPart.Material = "Neon"
-          v.Character.HumanoidRootPart.CanCollide = false
-        end)
-      end
-    end
+local function isNumber(str)
+  if tonumber(str) ~= nil or str == 'inf' then
+    return true
   end
-end)
 end
 
-local function RemoveHitBox()
-    local Disabled = false
-    game:GetService('RunService').RenderStepped:connect(function()
-        if Disabled then
-            for i,v in next, game:GetService('Players'):GetPlayers() do
-                if v.Name ~= game:GetService('Players').LocalPlayer.Name then
-                    pcall(function()
-                        v.Character.HumanoidRootPart.Transparency = 1
-                        v.Character.HumanoidRootPart.BrickColor = BrickColor.new("White")
-                        v.Character.HumanoidRootPart.Material = "Plastic"
-                    end)
-                end
-            end
-        end
-    end)
-end
+getgenv().HitboxSize = 15
+getgenv().HitboxTransparency = 0.9
+
+getgenv().HitboxStatus = false
+getgenv().TeamCheck = false
 
 Tab:AddToggle({
     Name = "Create HitBox",
     Default = false,
-    Callback = function()
-        Hitbox = not Hitbox
-        if not Hitbox then
-            CreateHitBox()
-            else
-                RemoveHitBox()
-        end
-            end
+    Callback = function(state)
+        getgenv().HitboxStatus = state
+    game:GetService('RunService').RenderStepped:connect(function()
+		if HitboxStatus == true and TeamCheck == false then
+			for i,v in next, game:GetService('Players'):GetPlayers() do
+				if v.Name ~= game:GetService('Players').LocalPlayer.Name then
+					pcall(function()
+						v.Character.HumanoidRootPart.Size = Vector3.new(HitboxSize, HitboxSize, HitboxSize)
+						v.Character.HumanoidRootPart.Transparency = HitboxTransparency
+						v.Character.HumanoidRootPart.BrickColor = BrickColor.new("Really black")
+						v.Character.HumanoidRootPart.Material = "Neon"
+						v.Character.HumanoidRootPart.CanCollide = false
+					end)
+				end
+			end
+			else
+		    for i,v in next, game:GetService('Players'):GetPlayers() do
+				if v.Name ~= game:GetService('Players').LocalPlayer.Name then
+					pcall(function()
+						v.Character.HumanoidRootPart.Size = Vector3.new(2,2,1)
+						v.Character.HumanoidRootPart.Transparency = 1
+						v.Character.HumanoidRootPart.BrickColor = BrickColor.new("Medium stone grey")
+						v.Character.HumanoidRootPart.Material = "Plastic"
+						v.Character.HumanoidRootPart.CanCollide = false
+					end)
+				end
+			end
+		end
+    end)
+end
 })
 
+Tab:AddSlider({
+    Name = "HitBox Range",
+    Min = 20,
+    Max = 100,
+    Default = 20,
+    Color = Color3.fromRGB(1, 217, 255),
+	Increment = 1,
+	ValueName = "HitBoxR",
+	Callback = function(value)
+	    getgenv().HitboxSize = value
+	end
+})
 
 OrionLib:Init()
